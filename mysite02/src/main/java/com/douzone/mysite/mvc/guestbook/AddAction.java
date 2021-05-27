@@ -18,8 +18,8 @@ public class AddAction implements Action{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
-		String password = request.getParameter("password");
-		String message = request.getParameter("message");
+		String password = request.getParameter("pass");
+		String message = request.getParameter("content");
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String regDate = format.format(date);
