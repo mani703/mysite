@@ -8,20 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.douzone.mvc.Action;
-import com.douzone.mysite.mvc.main.MainAction;
-import com.douzone.mysite.mvc.user.JoinAction;
-import com.douzone.mysite.mvc.user.JoinFormAction;
-import com.douzone.mysite.mvc.user.JoinSuccessAction;
-import com.douzone.mysite.mvc.user.UserActionFactory;
+import com.douzone.mysite.mvc.guestbook.GuestbookActionFactory;
 
-public class UserController extends HttpServlet {
+public class GuestbookController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String actionName = request.getParameter("a");
 		
-		Action action = new UserActionFactory().getAction(actionName);
+		Action action = new GuestbookActionFactory().getAction(actionName);
 		action.execute(request, response);
 	}
 

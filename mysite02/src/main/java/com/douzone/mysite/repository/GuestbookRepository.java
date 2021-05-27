@@ -104,47 +104,7 @@ public class GuestbookRepository {
 		}
 		return result;
 	}
-	
-	public int countOfList() {
-		int result = 0;
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		try {
-			conn = getConnection();
-			String sql = 
-					"select count(*)" +
-					" from guestbook";
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				int count = rs.getInt(1);
-				
-				result = count;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null) {
-					rs.close();
-				}
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
+
 	public boolean delete(GuestbookVo vo) {
 		boolean result = false;
 		Connection conn = null;
