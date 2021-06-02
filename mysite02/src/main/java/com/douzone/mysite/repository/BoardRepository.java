@@ -12,7 +12,7 @@ import com.douzone.mysite.vo.BoardVo;
 
 public class BoardRepository {
 
-	public List<BoardVo> findAll() {
+	public List<BoardVo> findAll(int pageSize, int startRow) {
 		List<BoardVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -21,12 +21,16 @@ public class BoardRepository {
 		try {
 			conn = getConnection();
 			String sql = 
-					"select a.no, a.title, a.depth, a.hit, b.no, b.name, now(), a.contents" +
+					"select a.no, a.title, a.depth, a.hit, b.no, b.name, a.reg_date, a.contents" +
 					" from board a, user b" + 
 					" where a.user_no = b.no" + 
-					" order by a.group_no DESC, a.order_no asc";
+					" order by a.group_no DESC, a.order_no asc" +
+					" limit ?, ?";
 
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, pageSize);
+			
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -308,6 +312,81 @@ public class BoardRepository {
 		}
 		return result;
 	}
+	
+	public boolean upHit(Long no) {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = getConnection();
+			
+			String sql = 
+					"update board" +
+					" set hit=hit+1" +
+					" where no=?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, no);
+
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int getPaging() {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+			String sql = 
+					"select count(*)" +
+					" from board";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int total = rs.getInt(1);
+				result = total;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 
 	private static Connection getConnection() throws SQLException {
 		Connection conn = null;
@@ -320,4 +399,5 @@ public class BoardRepository {
 		}
 		return conn;
 	}
+
 }

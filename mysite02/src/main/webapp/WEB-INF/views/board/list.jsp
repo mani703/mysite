@@ -56,13 +56,27 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="/mysite02/board?p=1">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="/mysite02/board?p=3">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
+						<c:if test="${map.currentPage != map.firstPage }">
+							<li><a href="${pageContext.request.contextPath }/board?p=${map.currentPage-1}">◀</a></li>
+						</c:if>
+						
+						<c:forEach var="i" begin="${map.blockStart}" end="${map.blockLast }">
+							<c:choose>
+								<c:when test="${i > map.lastPage }">
+									<li>${i }</li>
+								</c:when>	
+								<c:when test="${i == map.currentPage }">
+									<li class="selected">${i }</li>
+								</c:when>
+								<c:otherwise>
+									<li><a href="${pageContext.request.contextPath }/board?p=${i}">${i }</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						
+						<c:if test="${map.currentPage != map.lastPage }">
+							<li><a href="${pageContext.request.contextPath }/board?p=${map.currentPage+1}">▶</a></li>
+						</c:if>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->

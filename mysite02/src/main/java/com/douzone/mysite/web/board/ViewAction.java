@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.douzone.mysite.repository.BoardRepository;
 import com.douzone.web.Action;
 import com.douzone.web.util.MvcUtils;
 
@@ -24,6 +25,8 @@ public class ViewAction implements Action {
 		request.setAttribute("contents", contents);
 		request.setAttribute("userNo", userNo);
 		request.setAttribute("name", name);
+		
+		new BoardRepository().upHit(Long.parseLong(no));
 		
 		MvcUtils.forward("board/view", request, response);
 	}
