@@ -17,6 +17,7 @@
 		</listener-class>
 	</listener>
 
+	<!-- Encoding Filter -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
