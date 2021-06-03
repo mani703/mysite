@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +24,11 @@ public class GuestbookRepository {
 			conn = getConnection();
 			String sql = 
 					"insert into guestbook" +
-					" values(null, ?, ?, ?, ?)";
+					" values(null, ?, ?, ?, now())";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getName());
 			pstmt.setString(2, vo.getPassword());
 			pstmt.setString(3, vo.getMessage());
-			pstmt.setString(4, vo.getRegDate());
 			
 			int count = pstmt.executeUpdate();
 			result = count == 1;
@@ -62,31 +59,26 @@ public class GuestbookRepository {
 		try {
 			conn = getConnection();
 			String sql = 
-					"select no, name, password, message, reg_date" +
+					"select no, name, password, message, now()" +
 					" from guestbook";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				try {
-					Long no = rs.getLong(1);
-					String name = rs.getString(2);
-					String password = rs.getString(3);
-					String message = rs.getString(4);
-					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					String regDate = format.format(format.parse(rs.getString(5)));
-					
-					GuestbookVo vo = new GuestbookVo();
-					vo.setNo(no);
-					vo.setName(name);
-					vo.setPassword(password);
-					vo.setMessage(message);
-					vo.setRegDate(regDate);
-					
-					result.add(vo);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				Long no = rs.getLong(1);
+				String name = rs.getString(2);
+				String password = rs.getString(3);
+				String message = rs.getString(4);
+				String regDate = rs.getString(5);
+
+				GuestbookVo vo = new GuestbookVo();
+				vo.setNo(no);
+				vo.setName(name);
+				vo.setPassword(password);
+				vo.setMessage(message);
+				vo.setRegDate(regDate);
+
+				result.add(vo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -139,6 +131,14 @@ public class GuestbookRepository {
 			}
 		}
 		return result;
+	}
+	
+	public boolean delete(Long no, String password) {
+		GuestbookVo vo = new GuestbookVo();
+		vo.setNo(no);
+		vo.setPassword(password);
+		
+		return delete(vo);
 	}
 	
 	private static Connection getConnection() throws SQLException {
