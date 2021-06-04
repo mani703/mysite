@@ -30,12 +30,4 @@ public class GuestbookRepository {
 		int count = sqlSession.delete("guestbook.delete", vo);
 		return count == 1;
 	}
-	
-	public boolean delete(Long no, String password) {
-		GuestbookVo vo = new GuestbookVo();
-		vo.setNo(no);
-		vo.setPassword(password);
-		
-		return delete(vo);
-	}
 }
