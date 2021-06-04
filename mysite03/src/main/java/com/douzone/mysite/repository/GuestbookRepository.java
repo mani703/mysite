@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.douzone.mysite.exception.GuestbookRepositoryException;
 import com.douzone.mysite.vo.GuestbookVo;
 
 @Repository
@@ -50,7 +51,7 @@ public class GuestbookRepository {
 		return result;
 	}
 	
-	public List<GuestbookVo> findAll(){
+	public List<GuestbookVo> findAll() {
 		List<GuestbookVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -81,7 +82,7 @@ public class GuestbookRepository {
 				result.add(vo);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new GuestbookRepositoryException(e.getMessage());
 		} finally {
 			try {
 				if(rs != null) {
@@ -94,7 +95,7 @@ public class GuestbookRepository {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new GuestbookRepositoryException(e.getMessage());
 			}
 		}
 		return result;
