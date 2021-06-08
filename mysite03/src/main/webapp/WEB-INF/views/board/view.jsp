@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% pageContext.setAttribute("newline", "\n"); %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,23 +21,23 @@
 					</tr>
 					<tr>
 						<td class="label">제목</td>
-						<td>${title}</td>
+						<td>${vo.title}</td>
 					</tr>
 					<tr>
 						<td class="label">내용</td>
 						<td>
 							<div class="view-content">
-								${contents }
+							${fn:replace(vo.contents, newline, "<br/>") }
 							</div>
 						</td>
 					</tr>
 				</table>
 				<div class="bottom">
 					<a href="${pageContext.request.contextPath }/board">글목록</a>
-					<c:if test="${authUser.no == userNo && authUser.name == name}">
-						<a href="${pageContext.request.contextPath }/board?a=modifyform&no=${no }&title=${title}&contents=${contents}">글수정</a>
+					<c:if test="${authUser.no == vo.userNo && authUser.name == vo.userName}">
+						<a href="${pageContext.request.contextPath }/board/modifyform/${vo.no }">글수정</a>					
 					</c:if>
-					<a href="${pageContext.request.contextPath }/board?a=replyform&no=${no}">글쓰기</a>
+					<a href="${pageContext.request.contextPath }/board/replyform/${vo.no }">글쓰기</a>
 						
 				</div>
 			</div>

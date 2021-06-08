@@ -35,10 +35,10 @@
 							
 							<c:choose>
 								<c:when test="${vo.depth == 0 }">
-									<td style="text-align:left; padding-left:0px"><a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no }&title=${vo.title}&contents=${vo.contents}&userNo=${authUser.no }&name=${vo.userName}">${vo.title }</a></td>	
+									<td style="text-align:left; padding-left:0px"><a href="${pageContext.request.contextPath }/board/view/${vo.no }">${vo.title }</a></td>	
 								</c:when>
 								<c:otherwise>
-									<td style="text-align:left; padding-left:${vo.depth*20}px"><img src='${pageContext.servletContext.contextPath }/assets/images/reply.png'/><a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no }&title=${vo.title}&contents=${vo.contents}&userNo=${vo.userNo }&name=${vo.userName}">${vo.title }</a></td>
+									<td style="text-align:left; padding-left:${vo.depth*20}px"><img src='${pageContext.servletContext.contextPath }/assets/images/reply.png'/><a href="${pageContext.request.contextPath }/board/view/${vo.no }">${vo.title }</a></td>
 								</c:otherwise>
 							</c:choose>
 							<td>${vo.userName }</td>
@@ -46,7 +46,7 @@
 							<td>${vo.regDate }</td>
 							<td>
 							<c:if test="${authUser.no == vo.userNo}">
-								<a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no}" class="del" style='background-image:url("${pageContext.servletContext.contextPath }/assets/images/recycle.png")'>삭제</a>
+								<a href="${pageContext.request.contextPath }/board/delete/${vo.no}" class="del" style='background-image:url("${pageContext.servletContext.contextPath }/assets/images/recycle.png")'>삭제</a>
 							</c:if>
 							</td>
 						</tr>
@@ -57,7 +57,7 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${map.currentPage != map.firstPage }">
-							<li><a href="${pageContext.request.contextPath }/board?p=${map.currentPage-1}">◀</a></li>
+							<li><a href="${pageContext.request.contextPath }/board/p/${map.currentPage-1}">◀</a></li>
 						</c:if>
 						
 						<c:forEach var="i" begin="${map.blockStart}" end="${map.blockLast }">
@@ -69,20 +69,20 @@
 									<li class="selected">${i }</li>
 								</c:when>
 								<c:otherwise>
-									<li><a href="${pageContext.request.contextPath }/board?p=${i}">${i }</a></li>
+									<li><a href="${pageContext.request.contextPath }/board/p/${i}">${i }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						
 						<c:if test="${map.currentPage != map.lastPage }">
-							<li><a href="${pageContext.request.contextPath }/board?p=${map.currentPage+1}">▶</a></li>
+							<li><a href="${pageContext.request.contextPath }/board/p/${map.currentPage+1}">▶</a></li>
 						</c:if>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
 				<c:if test="${not empty authUser }">
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+						<a href="${pageContext.request.contextPath }/board/writeform" id="new-book">글쓰기</a>
 					</div>	
 				</c:if>	
 			</div>
