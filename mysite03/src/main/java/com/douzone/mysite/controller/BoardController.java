@@ -3,6 +3,7 @@ package com.douzone.mysite.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.douzone.mysite.security.Auth;
+import com.douzone.mysite.security.AuthUser;
 import com.douzone.mysite.service.BoardService;
 import com.douzone.mysite.vo.BoardVo;
+import com.douzone.mysite.vo.UserVo;
 
 @Controller
 @RequestMapping("/board")
@@ -21,71 +25,30 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardservice;
-
-	@RequestMapping("")
-	public String index(Model model) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
-
-		int currentPage = 1;
-		
+	
+	@RequestMapping(value={"", "/{page}"})
+	public String index(@PathVariable Optional<Integer> page, Model model) {
+		int currentPage = page.isPresent() ? page.get() : 1;
 		int pageSize = 5;
-		int count = boardservice.getPaging();
-		int firstPage = 1;
-		int lastPage = (int) Math.ceil((double) count / pageSize);
-		int startRow = (currentPage - 1) * pageSize;
-		int endRow = currentPage * pageSize;
-
-		int blockNum = (int) Math.floor((currentPage - 1) / pageSize);
-		int blockStart = (pageSize * blockNum) + 1;
-		int blockLast = blockStart + (pageSize - 1);
-
-		map.put("count", count); // 게시물 총 개수
-		map.put("pageSize", pageSize); // 한 페이지당 나오는 개수
-		map.put("currentPage", currentPage); // 현재 선택한 페이지
-		map.put("startRow", startRow); // 한 페이지의 시작글
-		map.put("endRow", endRow); // 한 페이지의 마시작
-		map.put("firstPage", firstPage);
-		map.put("lastPage", lastPage);
-		map.put("blockStart", blockStart);
-		map.put("blockLast", blockLast);
 		
-		List<BoardVo> list = boardservice.getBoardList(startRow, pageSize);
+		Map<String, Integer> map = boardservice.getMapInfo(currentPage, pageSize);
+		List<BoardVo> list = boardservice.getBoardList(currentPage, pageSize);
 		
 		model.addAttribute("map", map);
 		model.addAttribute("list", list);
 		return "board/index";
 	}
 	
-	@RequestMapping(value="/p/{page}", method=RequestMethod.GET)
-	public String index(@PathVariable("page") int page, Model model) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
-
+	@RequestMapping(value="/search", method=RequestMethod.POST)
+	public String search(@RequestParam(value="kwd", required=true, defaultValue="") String kwd,
+						@RequestParam(value="page", required=true, defaultValue="1") int page,
+						Model model) {
+		
 		int currentPage = page;
-		
 		int pageSize = 5;
-		int count = boardservice.getPaging();
-		int firstPage = 1;
-		int lastPage = (int) Math.ceil((double) count / pageSize);
-		int startRow = (currentPage - 1) * pageSize;
-		int endRow = currentPage * pageSize;
-
-		int blockNum = (int) Math.floor((currentPage - 1) / pageSize);
-		int blockStart = (pageSize * blockNum) + 1;
-		int blockLast = blockStart + (pageSize - 1);
-
-		map.put("count", count); // 게시물 총 개수
-		map.put("pageSize", pageSize); // 한 페이지당 나오는 개수
-		map.put("currentPage", currentPage); // 현재 선택한 페이지
-		map.put("startRow", startRow); // 한 페이지의 시작글
-		map.put("endRow", endRow); // 한 페이지의 마시작
-		map.put("firstPage", firstPage);
-		map.put("lastPage", lastPage);
-		map.put("blockStart", blockStart);
-		map.put("blockLast", blockLast);
 		
-		List<BoardVo> list = boardservice.getBoardList(startRow, pageSize);
-		
-		model.addAttribute("map", map);
+		Map<String, Integer> map = boardservice.getSearchMapInfo(currentPage, pageSize);
+		List<BoardVo> list = boardservice.searchToBoard("kwd");
 		model.addAttribute("list", list);
 		return "board/index";
 	}
@@ -95,9 +58,10 @@ public class BoardController {
 		return "board/write";
 	}
 	
-	@RequestMapping(value="/write/{authNo}", method=RequestMethod.POST)
-	public String write(@PathVariable("authNo") Long authNo, BoardVo vo) {
-		vo.setUserNo(authNo);
+	@Auth
+	@RequestMapping(value="/write", method=RequestMethod.POST)
+	public String write(@AuthUser UserVo authUser, BoardVo vo) {
+		vo.setUserNo(authUser.getNo());
 		boardservice.insertToBoard(vo);
 		return "redirect:/board";
 	} 
@@ -132,13 +96,14 @@ public class BoardController {
 		return "board/reply";
 	}
 	
-	@RequestMapping(value="/reply/{no}/{authNo}", method=RequestMethod.POST)
+	@Auth
+	@RequestMapping(value="/reply/{no}", method=RequestMethod.POST)
 	public String insert(@PathVariable("no") Long no,
-						 @PathVariable("authNo") Long authNo,
+						 @AuthUser UserVo authUser,
 						 @RequestParam(value="title", required = true, defaultValue = "") String title,
 						 @RequestParam(value="contents", required = true, defaultValue = "") String contents) {
 		BoardVo vo = boardservice.getInfoBoardCount(no);
-		vo.setUserNo(authNo);
+		vo.setUserNo(authUser.getNo());
 		vo.setTitle(title);
 		vo.setContents(contents);
 		boardservice.updateInfoNumber(vo.getGroupNo(), vo.getOrderNo());

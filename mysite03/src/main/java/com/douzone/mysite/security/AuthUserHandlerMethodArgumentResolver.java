@@ -13,10 +13,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.douzone.mysite.vo.UserVo;
 
 public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
-
 	@Override
-	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+	public Object resolveArgument(
+		MethodParameter parameter,
+		ModelAndViewContainer mavContainer,
+		NativeWebRequest webRequest,
+		WebDataBinderFactory binderFactory) throws Exception {
 		if(supportsParameter(parameter) == false) {
 			return WebArgumentResolver.UNRESOLVED;
 		}
@@ -29,7 +31,7 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 		
 		return session.getAttribute("authUser");
 	}
-	
+
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		AuthUser authUser = parameter.getParameterAnnotation(AuthUser.class);
@@ -41,9 +43,11 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 		
 		// 파라미터 타입이 UserVo가 아니면,
 		if(parameter.getParameterType().equals(UserVo.class) == false) {
-			return false;
+				return false;
 		}
 		
-		return false;
+		return true;
 	}
+
+
 }

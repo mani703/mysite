@@ -90,4 +90,10 @@
 	delete from board where no=#{_parameter}
 	]]>
 	</delete>
+	
+	<select id="search" parameterType="String" resultType="boardvo">
+	<![CDATA[
+	
+	]]>
+	</select>
 </mapper>

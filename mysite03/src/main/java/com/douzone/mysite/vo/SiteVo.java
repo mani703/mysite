@@ -5,6 +5,7 @@ public class SiteVo {
 	private String welcome;
 	private String profile;
 	private String description;
+
 	public String getTitle() {
 		return title;
 	}

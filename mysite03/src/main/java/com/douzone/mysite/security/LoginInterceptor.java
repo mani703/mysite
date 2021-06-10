@@ -11,7 +11,6 @@ import com.douzone.mysite.service.UserService;
 import com.douzone.mysite.vo.UserVo;
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-	
 	@Autowired
 	private UserService userService;
 	
@@ -26,12 +25,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			request.setAttribute("email", email);
 			request.setAttribute("result", "fail");
 			request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
-			
 			return false;
 		}
 		
 		// session 처리
 		System.out.println(authUser);
+		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", authUser);
 		response.sendRedirect(request.getContextPath());

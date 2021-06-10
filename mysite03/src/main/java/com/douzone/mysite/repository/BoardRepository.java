@@ -52,6 +52,10 @@ public class BoardRepository {
 		return sqlSession.selectOne("board.getPaging");
 	}
 	
+	public int getSearchPaging() {
+		return sqlSession.selectOne("board.getSearchPaging");
+	}
+	
 	public BoardVo getRow(Long no) {
 		return sqlSession.selectOne("board.getRow", no);
 	}
@@ -63,6 +67,10 @@ public class BoardRepository {
 	public boolean delete(Long no) {
 		int count = sqlSession.delete("board.delete", no);
 		return count == 1;
+	}
+
+	public List<BoardVo> search(String kwd) {
+		return sqlSession.selectList(kwd);
 	}
 
 }

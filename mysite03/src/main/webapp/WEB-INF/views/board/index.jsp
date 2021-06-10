@@ -15,7 +15,8 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="post">
+				<form id="search_form" action="${pageContext.request.contextPath }/board/search" method="post">
+					<input type="hidden" name="page" value="">
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -57,7 +58,7 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${map.currentPage != map.firstPage }">
-							<li><a href="${pageContext.request.contextPath }/board/p/${map.currentPage-1}">◀</a></li>
+							<li><a href="${pageContext.request.contextPath }/board/${map.currentPage-1}">◀</a></li>
 						</c:if>
 						
 						<c:forEach var="i" begin="${map.blockStart}" end="${map.blockLast }">
@@ -69,13 +70,13 @@
 									<li class="selected">${i }</li>
 								</c:when>
 								<c:otherwise>
-									<li><a href="${pageContext.request.contextPath }/board/p/${i}">${i }</a></li>
+									<li><a href="${pageContext.request.contextPath }/board/${i}">${i }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						
 						<c:if test="${map.currentPage != map.lastPage }">
-							<li><a href="${pageContext.request.contextPath }/board/p/${map.currentPage+1}">▶</a></li>
+							<li><a href="${pageContext.request.contextPath }/board/${map.currentPage+1}">▶</a></li>
 						</c:if>
 					</ul>
 				</div>					
