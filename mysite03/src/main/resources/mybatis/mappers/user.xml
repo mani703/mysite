@@ -24,6 +24,14 @@
 		]]>
 	</select>
 	
+	<select id="findByEmail" parameterType="String" resultType="uservo">
+		<![CDATA[
+			select no, email, name, gender
+			from user
+			where email=#{email }	
+		]]>
+	</select>
+	
 	<update id="update" parameterType="uservo">
 		<choose>
 			<when test='password == ""'>
