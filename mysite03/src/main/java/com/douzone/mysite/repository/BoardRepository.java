@@ -1,5 +1,6 @@
 package com.douzone.mysite.repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +16,28 @@ public class BoardRepository {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public List<BoardVo> findAll(Map<String, Integer> pageInfo) {
+	public List<BoardVo> findAll(int startRow, int pageSize) {
+		Map<String, Integer> pageInfo = new HashMap<>();
+		pageInfo.put("startRow", startRow);
+		pageInfo.put("pageSize", pageSize);
+		
 		return sqlSession.selectList("board.findAll", pageInfo);
 	}
 	
-	public boolean addNumber(Map<String, Integer> pageInfo) {
+	public List<BoardVo> findSearchAll(int startRow, int pageSize, String kwd) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("startRow", startRow);
+		map.put("pageSize", pageSize);
+		map.put("kwd", kwd);
+		
+		return sqlSession.selectList("board.findSearchAll", map);
+	}
+	
+	public boolean addNumber(int groupNo, int orderNo) {
+		Map<String, Integer> pageInfo = new HashMap<>();
+		pageInfo.put("groupNo", groupNo);
+		pageInfo.put("orderNo", orderNo);
+		
 		int count = sqlSession.update("board.addNumber", pageInfo);
 		return count == 1;
 	}
@@ -52,8 +70,8 @@ public class BoardRepository {
 		return sqlSession.selectOne("board.getPaging");
 	}
 	
-	public int getSearchPaging() {
-		return sqlSession.selectOne("board.getSearchPaging");
+	public int getSearchPaging(String kwd) {
+		return sqlSession.selectOne("board.getSearchPaging", kwd);
 	}
 	
 	public BoardVo getRow(Long no) {
@@ -68,9 +86,4 @@ public class BoardRepository {
 		int count = sqlSession.delete("board.delete", no);
 		return count == 1;
 	}
-
-	public List<BoardVo> search(String kwd) {
-		return sqlSession.selectList(kwd);
-	}
-
 }

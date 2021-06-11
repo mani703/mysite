@@ -16,7 +16,6 @@
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="${pageContext.request.contextPath }/board/search" method="post">
-					<input type="hidden" name="page" value="">
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -57,26 +56,50 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<c:if test="${map.currentPage != map.firstPage }">
-							<li><a href="${pageContext.request.contextPath }/board/${map.currentPage-1}">◀</a></li>
+						<c:if test="${empty kwd }">
+							<c:if test="${map.currentPage != map.firstPage }">
+								<li><a href="${pageContext.request.contextPath }/board/${map.currentPage-1}">◀</a></li>
+							</c:if>
+							
+							<c:forEach var="i" begin="${map.blockStart}" end="${map.blockLast }">
+								<c:choose>
+									<c:when test="${i > map.lastPage }">
+										<li>${i }</li>
+									</c:when>	
+									<c:when test="${i == map.currentPage }">
+										<li class="selected">${i }</li>
+									</c:when>
+									<c:otherwise>
+										<li><a href="${pageContext.request.contextPath }/board/${i}">${i }</a></li>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							<c:if test="${map.currentPage != map.lastPage }">
+								<li><a href="${pageContext.request.contextPath }/board/${map.currentPage+1}">▶</a></li>
+							</c:if>
 						</c:if>
 						
-						<c:forEach var="i" begin="${map.blockStart}" end="${map.blockLast }">
-							<c:choose>
-								<c:when test="${i > map.lastPage }">
-									<li>${i }</li>
-								</c:when>	
-								<c:when test="${i == map.currentPage }">
-									<li class="selected">${i }</li>
-								</c:when>
-								<c:otherwise>
-									<li><a href="${pageContext.request.contextPath }/board/${i}">${i }</a></li>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-						
-						<c:if test="${map.currentPage != map.lastPage }">
-							<li><a href="${pageContext.request.contextPath }/board/${map.currentPage+1}">▶</a></li>
+						<c:if test="${not empty kwd}">
+							<c:if test="${map.currentPage != map.firstPage }">
+								<li><a href="${pageContext.request.contextPath }/board/search?p=${map.currentPage-1}&kwd=${kwd}">◀</a></li>
+							</c:if>
+							
+							<c:forEach var="i" begin="${map.blockStart}" end="${map.blockLast }">
+								<c:choose>
+									<c:when test="${i > map.lastPage }">
+										<li>${i }</li>
+									</c:when>	
+									<c:when test="${i == map.currentPage }">
+										<li class="selected">${i }</li>
+									</c:when>
+									<c:otherwise>
+										<li><a href="${pageContext.request.contextPath }/board/search?p=${i}&kwd=${kwd}">${i }</a></li>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							<c:if test="${map.currentPage != map.lastPage }">
+								<li><a href="${pageContext.request.contextPath }/board/search?p=${map.currentPage+1}&kwd=${kwd}">▶</a></li>
+							</c:if>
 						</c:if>
 					</ul>
 				</div>					

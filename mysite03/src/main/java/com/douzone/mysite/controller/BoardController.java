@@ -1,6 +1,5 @@
 package com.douzone.mysite.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,31 +35,36 @@ public class BoardController {
 		
 		model.addAttribute("map", map);
 		model.addAttribute("list", list);
+		
 		return "board/index";
 	}
 	
-	@RequestMapping(value="/search", method=RequestMethod.POST)
+	@RequestMapping("/search")
 	public String search(@RequestParam(value="kwd", required=true, defaultValue="") String kwd,
-						@RequestParam(value="page", required=true, defaultValue="1") int page,
-						Model model) {
-		
-		int currentPage = page;
+						 @RequestParam(value="p", required=true, defaultValue="1") int currentPage,
+						 Model model) {
 		int pageSize = 5;
 		
-		Map<String, Integer> map = boardservice.getSearchMapInfo(currentPage, pageSize);
-		List<BoardVo> list = boardservice.searchToBoard("kwd");
+		Map<String, Integer> map = boardservice.getSearchMapInfo(currentPage, pageSize, kwd);
+		List<BoardVo> list = boardservice.searchToBoard(currentPage, pageSize, kwd);
+		
+		model.addAttribute("kwd", kwd);
+		model.addAttribute("map", map);
 		model.addAttribute("list", list);
+		
 		return "board/index";
 	}
-	
+
 	@RequestMapping("/writeform")
 	public String writeForm() {
+		System.out.println("sdfsdfsd");
 		return "board/write";
 	}
 	
 	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.POST)
 	public String write(@AuthUser UserVo authUser, BoardVo vo) {
+		System.out.println("2222222222");
 		vo.setUserNo(authUser.getNo());
 		boardservice.insertToBoard(vo);
 		return "redirect:/board";
