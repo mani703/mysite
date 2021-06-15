@@ -21,7 +21,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-public class MvcConfig extends WebMvcConfigurerAdapter{
+public class MvcConfig extends WebMvcConfigurerAdapter {
 	
 	// View Resolver
 	@Bean
@@ -38,30 +38,28 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 	// Message Converters
 	@Bean
 	public StringHttpMessageConverter stringHttpMessageConverter() {
-		StringHttpMessageConverter messageConverter = new StringHttpMessageConverter();		
+		StringHttpMessageConverter messageConverter = new StringHttpMessageConverter();  
 		messageConverter.setSupportedMediaTypes(
-				Arrays.asList(
-					new MediaType("text", "html", Charset.forName("utf-8"))
-				)
+			Arrays.asList(
+				new MediaType("text", "html", Charset.forName("utf-8"))
+			)
 		);
-		
 		return messageConverter;
 	}
 	
 	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
 		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder()
-				.indentOutput(true)
-				.dateFormat(new SimpleDateFormat("yyyy-mm-dd"));
+			.indentOutput(true)
+			.dateFormat(new SimpleDateFormat("yyyy-mm-dd"));
 		
-		MappingJackson2HttpMessageConverter messageConverter 
-			= new MappingJackson2HttpMessageConverter(builder.build()); 
+		MappingJackson2HttpMessageConverter messageConverter
+			= new MappingJackson2HttpMessageConverter(builder.build());
 		messageConverter.setSupportedMediaTypes(
-				Arrays.asList(
-					new MediaType("application", "json", Charset.forName("utf-8"))
-				)
+			Arrays.asList(
+				new MediaType("application", "json", Charset.forName("utf-8"))	
+			)
 		);
-		
 		return messageConverter;
 	}
 
@@ -76,5 +74,4 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
-	
 }
