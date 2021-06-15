@@ -72,7 +72,6 @@ $(function(){
 					</p>   
 					
 					<label class="block-label" for="email">이메일</label>
-					
 					<form:input path="email"/>
 					<input type="button" id="btn-check" value="중복체크">
 					<img id="img-check" src="${pageContext.request.contextPath }/assets/images/check.png" style="width:18px; vertical-align: bottom; display: none"/>
