@@ -5,10 +5,10 @@
     <artifactId>mysite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>mysite04</artifactId>
+  <artifactId>mysite05</artifactId>
   <packaging>war</packaging>
   
-  	<properties>
+   	<properties>
 		<org.springframework-version>4.3.4.RELEASE</org.springframework-version>
 		<jcloverslf4j.version>1.7.6</jcloverslf4j.version>		
     	<logback.version>1.1.1</logback.version>
@@ -150,7 +150,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>mysite04</finalName>
+		<finalName>mysite05</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -166,7 +166,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<url>http://192.168.80.117:8080/manager/text</url>
-					<path>/mysite04</path>
+					<path>/mysite05</path>
 					<username>admin</username>
 					<password>manager</password>
 				</configuration>
