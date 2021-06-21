@@ -27,6 +27,7 @@ public class FileuploadConfig extends WebMvcConfigurerAdapter{
 		return multipartResolver;
 	}
 
+	// Resource Mapping(URL Magic Mapping)
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry
