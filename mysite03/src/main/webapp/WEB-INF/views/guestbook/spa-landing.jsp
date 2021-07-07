@@ -19,15 +19,162 @@
 *  - 버튼 이벤트 구현 -> 스크롤 이벤트로 바꾼다.
 *  - no 기준으로 동적 쿼리를 repository에 구현
 *  - 렌더링 참고: /ch08/test/gb/ex1
-* 
-* 과제 ex2: 메세지 등록(add)
+*/
+var render = function(vo){
+	const html = 
+		"<li data-no='" + vo.no + "'>" +
+			"<strong>" + vo.name + "</strong>" +
+			"<p>" + vo.message + "</p>" +
+			"<strong></strong>" + 
+			"<a href='' data-no='" + vo.no + "'>삭제</a>" + 
+		"</li>";
+	
+	return html;
+}
+
+var fetch = function(no){
+	$.ajax({
+		url: "${pageContext.request.contextPath }/guestbook/api/list",
+		dataType: "json",
+		type: "get",
+		data: "no=" + no,
+		success: function(response){
+			response.data.forEach(function(vo){
+				html = render(vo);
+				$("#list-guestbook").append(html);	
+			});
+		}
+	});
+}
+
+$(function(){
+	no = 0;
+	$("#btn-fetch").click(function(){
+		no = $("#list-guestbook li:last-child").attr("data-no");
+		fetch(no);
+	});
+	
+	$(document).on("click", "#list-guestbook li a", function(event){
+		event.preventDefault();
+		let no = $(this).data("no");
+		$("#hidden-no").val(no);
+		
+		deleteDialog.dialog("open");
+	});
+	
+	const deleteDialog = $("#dialog-delete-form").dialog({
+		autoOpen: false,
+		width: 300,
+		height: 220,
+		modal: true,
+		buttons: {
+			"삭제": function(){
+				const no = $("#hidden-no").val();
+				const password = $("#password-delete").val();
+				$.ajax({
+					url: "${pageContext.request.contextPath }/guestbook/api/delete/" + no,
+					dataType: "json",
+					type: "post",
+					data: "password=" + password,
+					success: function(response){
+						if(response.data == -1){
+							$(".validateTips.error").show();
+							$("#password-delete").val("");
+							return;
+						}
+						
+						$("#list-guestbook li[data-no=" + response.data + "]").remove();
+						deleteDialog.dialog('close');
+					}
+				});
+			},
+			"취소": function(){
+				$(this).dialog("close");
+			}
+		},
+		close: function(){
+			$("#password-delete").val("");
+			$("#hidden-no").val("");
+			$(".validateTips.error").hide();
+		}
+	});
+	
+	fetch(no);
+});
+
+
+/* 과제 ex2: 메세지 등록(add)
 *  - validation
 *  - message 기반 dialog plugin 사용법
 *  - form submit 막기
 *  - 데이터 하나를 렌더링(preppend)
 *  - 참고: /ch08/test/gb/ex2
-*  
-* 과제 ex3: 메세지 삭제(delete)
+*/
+$(function(){
+	$("#add-form").submit(function(event){
+		event.preventDefault();
+		
+		vo = {
+			name: $("#input-name").val(),
+			password: $("#input-password").val(),
+			message: $("#tx-content").val()
+		};
+		
+		if(vo.name == ""){
+			$("#dialog-message")
+				.html("<p>이름이 비어 있습니다.</p>")
+				.dialog({
+					modal: true,
+					buttons: {
+						"확인": function(){
+							$(this).dialog("close");
+						}
+					}
+				});
+			return;
+		} else if(vo.password == ""){
+			$("#dialog-message")
+				.html("<p>패스워드가 비어 있습니다.</p>")
+				.dialog({
+					modal: true,
+					buttons: {
+						"확인": function(){
+							$(this).dialog("close");
+						}
+					}
+				});
+			return;
+		} else if(vo.message == ""){
+			$("#dialog-message")
+			.html("<p>내용이 비어 있습니다.</p>")
+			.dialog({
+				modal: true,
+				buttons: {
+					"확인": function(){
+						$(this).dialog("close");
+					}
+				}
+			});
+			return;
+		}
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath }/guestbook/api/add",
+			dataType: "json",
+			type: "post",
+			contentType: "application/json",
+			data: JSON.stringify(vo),
+			success: function(response){
+				var vo = response.data;
+				
+				html = render(vo);
+				$("#list-guestbook").prepend(html);	
+			}
+		});
+	});
+});
+
+/* 과제 ex3: 메세지 삭제(delete)
 *  - a tag 기본동작 막기
 *  - live event
 *  - form 기반 dialog plugin 사용법
@@ -35,7 +182,8 @@
 *  - 비밀번호가 틀린 경우(삭제실패, no=0) 사용자한테 알려주는 UI
 *  - 삭제가 성공한 경우(no > 0), data-no=10 인 li element를 삭제
 *  - 참고: /ch08/test/gb/ex3
-*/
+*/  
+
 </script>
 </head>
 <body>
@@ -44,50 +192,25 @@
 		<div id="content">
 			<div id="guestbook">
 				<h1>방명록</h1>
+				
+				
 				<form id="add-form" action="" method="post">
 					<input type="text" id="input-name" placeholder="이름">
 					<input type="password" id="input-password" placeholder="비밀번호">
 					<textarea id="tx-content" placeholder="내용을 입력해 주세요."></textarea>
 					<input type="submit" value="보내기" />
 				</form>
-				<ul id="list-guestbook">
-
-					<li data-no=''>
-						<strong>지나가다가</strong>
-						<p>
-							별루입니다.<br>
-							비번:1234 -,.-
-						</p>
-						<strong></strong>
-						<a href='' data-no=''>삭제</a> 
-					</li>
-					
-					<li data-no=''>
-						<strong>둘리</strong>
-						<p>
-							안녕하세요<br>
-							홈페이지가 개 굿 입니다.
-						</p>
-						<strong></strong>
-						<a href='' data-no=''>삭제</a> 
-					</li>
-
-					<li data-no=''>
-						<strong>주인</strong>
-						<p>
-							아작스 방명록 입니다.<br>
-							테스트~
-						</p>
-						<strong></strong>
-						<a href='' data-no=''>삭제</a> 
-					</li>
-					
-									
-				</ul>
+				
+				
+				<ul id="list-guestbook"></ul>
 				<div style="margin:20px 0 0 0">
 					<button id="btn-fetch">다음 가져오기</button>
 				</div>
+				
+				
 			</div>
+			
+			
 			<div id="dialog-delete-form" title="메세지 삭제" style="display:none">
   				<p class="validateTips normal">작성시 입력했던 비밀번호를 입력하세요.</p>
   				<p class="validateTips error" style="display:none">비밀번호가 틀립니다.</p>
@@ -97,9 +220,10 @@
 					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
   				</form>
 			</div>
-			<div id="dialog-message" title="" style="display:none">
-  				<p></p>
-			</div>						
+				<div id="dialog-message" title="" style="display:none">
+			</div>
+			
+									
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp" />
 		<c:import url="/WEB-INF/views/includes/footer.jsp" />

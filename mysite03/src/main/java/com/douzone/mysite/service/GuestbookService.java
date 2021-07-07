@@ -20,7 +20,7 @@ public class GuestbookService {
 	
 	// ajax
 	public List<GuestbookVo> getMessageList(Long no/*기준*/) {
-		return guestbookRepository.findAll();
+		return guestbookRepository.findAll(no);
 	}
 	
 	public boolean deleteMessage(Long no, String password) {
@@ -31,8 +31,8 @@ public class GuestbookService {
 		return guestbookRepository.delete(vo);
 	}
 	
-	public void addMessage(GuestbookVo vo) {
-		guestbookRepository.insert(vo);
+	public boolean addMessage(GuestbookVo vo) {
+		return guestbookRepository.insert(vo);
 	}
 
 }
