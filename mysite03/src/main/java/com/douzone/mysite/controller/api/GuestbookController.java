@@ -41,9 +41,7 @@ public class GuestbookController {
 			@PathVariable Long no,
 			@RequestParam(value="password", required=true, defaultValue="") String password) {
 		
-		boolean flag = guestbookService.deleteMessage(no, password);
-		Long data = flag ? no : -1L;
-		
+		Long data = guestbookService.deleteMessage(no, password) ? no : -1L;
 		return JsonResult.success(data);
 	}
 }
