@@ -15,10 +15,26 @@
 /* guestbook application based on jQuery 
 * 
 * 과제 ex1: 리스트
-*  - no 기준의 리스트를 부분적(3개씩) 가져와서 렌더링
+*  - no 기준의 리스트를 부분적(3개씩) 가져와서 리스트 렌더링(append)
 *  - 버튼 이벤트 구현 -> 스크롤 이벤트로 바꾼다.
 *  - no 기준으로 동적 쿼리를 repository에 구현
 *  - 렌더링 참고: /ch08/test/gb/ex1
+* 
+* 과제 ex2: 메세지 등록(add)
+*  - validation
+*  - message 기반 dialog plugin 사용법
+*  - form submit 막기
+*  - 데이터 하나를 렌더링(preppend)
+*  - 참고: /ch08/test/gb/ex2
+*  
+* 과제 ex3: 메세지 삭제(delete)
+*  - a tag 기본동작 막기
+*  - live event
+*  - form 기반 dialog plugin 사용법
+*  - 응답에 대해 해당 li 삭제
+*  - 비밀번호가 틀린 경우(삭제실패, no=0) 사용자한테 알려주는 UI
+*  - 삭제가 성공한 경우(no > 0), data-no=10 인 li element를 삭제
+*  - 참고: /ch08/test/gb/ex3
 */
 </script>
 </head>
