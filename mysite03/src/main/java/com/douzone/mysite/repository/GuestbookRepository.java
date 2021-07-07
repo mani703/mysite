@@ -18,6 +18,11 @@ public class GuestbookRepository {
 	public List<GuestbookVo> findAll() {
 		return sqlSession.selectList("guestbook.findAll");
 	}
+	
+	// ajax
+	public List<GuestbookVo> findAll(Long no) {
+		return sqlSession.selectList("guestbook.findAllByNo", no);
+	}
 
 	public boolean insert(GuestbookVo vo) {
 		System.out.println(vo);

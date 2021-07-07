@@ -18,6 +18,11 @@ public class GuestbookService {
 		return guestbookRepository.findAll();
 	}
 	
+	// ajax
+	public List<GuestbookVo> getMessageList(Long no/*기준*/) {
+		return guestbookRepository.findAll();
+	}
+	
 	public void deleteMessage(Long no, String password) {
 		GuestbookVo vo = new GuestbookVo();
 		vo.setNo(no);
