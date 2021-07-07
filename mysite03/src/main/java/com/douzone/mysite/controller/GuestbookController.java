@@ -44,10 +44,9 @@ public class GuestbookController {
 		guestbookService.deleteMessage(no, password);
 		return "redirect:/guestbook";
 	}
-	
-//	@ExceptionHandler(Exception.class)
-//	public String handlerException() {
-//		// 1. logging
-//		return "error/exception";	// 2. 사과 페이지 이동
-//	}
+
+	@RequestMapping("/spa")
+	public String spaLanding() {
+		return "guestbook/spa-landing";
+	}
 }
