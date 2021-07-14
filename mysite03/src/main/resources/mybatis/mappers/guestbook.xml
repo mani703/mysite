@@ -13,7 +13,7 @@
 		<choose>
 			<when test='_parameter == 0'>
 				<![CDATA[
-				select no, name, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as reg_date, message
+				select no, name, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as regDate, message
 				from guestbook
 				order by no desc
 				limit 0, 3
