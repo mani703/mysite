@@ -57,7 +57,6 @@ public class BoardController {
 
 	@RequestMapping("/writeform")
 	public String writeForm() {
-		System.out.println("sdfsdfsd");
 		return "board/write";
 	}
 	

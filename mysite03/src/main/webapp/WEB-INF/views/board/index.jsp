@@ -102,7 +102,8 @@
 							</c:if>
 						</c:if>
 					</ul>
-				</div>					
+				</div>
+									
 				<!-- pager 추가 -->
 				<c:if test="${not empty authUser }">
 					<div class="bottom">
